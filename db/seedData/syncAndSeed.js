@@ -1,7 +1,7 @@
 const { conn, User, Product, CreditCard, Category, Genre } = require("../");
 const { USERS } = require("./seedDataUsers");
 const { CATEGORIES } = require("./seedDataCategories");
-
+const { PRODUCTS } = require("./seedDataProducts");
 const { GENRES } = require("./seedDataGenres");
 
 const syncAndSeed = async () => {
@@ -28,20 +28,15 @@ const syncAndSeed = async () => {
       userId: createdUsers[3].id,
     });
 
-    const [teeShirts, hoodies, albums, hats, posters, accessories] =
+    const categories =
       await Promise.all(
         CATEGORIES.map((category) => Category.create({ name: category }))
       );
 
-    const [rock, pop, hipHop, country, electronic, metal, rAndB] =
+    const genres =
       await Promise.all(GENRES.map((genre) => Genre.create({ name: genre })));
 
-    await Product.create({
-      name: "test",
-      cost: 5.99,
-      categoryId: teeShirts.id,
-      genreId: rock.id,
-    });
+    await PRODUCTS({categories, genres});
   } catch (ex) {
     console.log(ex);
   }
